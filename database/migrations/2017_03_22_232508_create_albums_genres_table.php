@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlbumsImagesTable extends Migration
+class CreateAlbumsGenresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateAlbumsImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('albums_images', function (Blueprint $table) {
+        Schema::create('albums_genres', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('albums_id')->unsigned();
-            $table->integer('images_id')->unsigned();
+            $table->integer('genres_id')->unsigned();
 
             $table->foreign('albums_id')->references('id')->on('albums')->onDelete('cascade');
-            $table->foreign('images_id')->references('id')->on('images')->onDelete('cascade');
+            $table->foreign('genres_id')->references('id')->on('genres')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateAlbumsImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('albums_images');
+        Schema::dropIfExists('albums_genres');
     }
 }
