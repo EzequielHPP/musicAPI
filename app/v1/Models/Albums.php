@@ -30,6 +30,14 @@ class Albums extends Model
      */
     public function tracks()
     {
-        return $this->hasMany(Tracks::class,'id','id');
+        return $this->hasMany(Tracks::class,'album_id','id');
+    }
+
+    /**
+     * Album has many genres.
+     */
+    public function genres()
+    {
+        return $this->belongsToMany(Genres::class);
     }
 }

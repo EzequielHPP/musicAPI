@@ -16,8 +16,10 @@ class CreateArtistsTable extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->integer('image_id');
+            $table->integer('image_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
         });
     }
 

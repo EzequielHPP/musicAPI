@@ -15,12 +15,14 @@ class CreateTracksTable extends Migration
     {
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('album_id');
+            $table->integer('album_id')->unsigned();
             $table->string('title');
             $table->integer('length');
             $table->integer('disc_number');
             $table->integer('track_order');
             $table->timestamps();
+
+            $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
         });
     }
 
