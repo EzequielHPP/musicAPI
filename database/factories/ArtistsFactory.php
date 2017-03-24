@@ -14,7 +14,7 @@
 $factory->define(App\v1\Models\Artists::class, function (Faker\Generator $faker) {
 
     return [
-        'name' => $faker->name,
+        'name' => ucwords($faker->word.' '.$faker->word),
         'image_id' => 1
     ];
 });

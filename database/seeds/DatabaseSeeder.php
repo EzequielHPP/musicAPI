@@ -39,6 +39,11 @@ class DatabaseSeeder extends Seeder
                         $album->genres()->attach($genreId);
                     }
 
+                    // Create album cover images
+                    factory(App\v1\Models\Images::class, rand(1,3))->create()->each(function ($cover) use($album) {
+                        $album->images()->attach($cover->id);
+                    });
+
                     $nextTrack = 1;
 
                     // Create the tracks for this album
