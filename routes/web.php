@@ -26,5 +26,5 @@ Route::group(['prefix' => 'api/v1'], function () {
      * Albums actions
      */
     Route::get('albums', 'Api\V1\AlbumsController@index');
-    Route::get('albums/{id}', 'Api\V1\AlbumsController@index');
+    Route::get('albums/{hash}', 'Api\V1\AlbumsController@getAlbum');
 });
