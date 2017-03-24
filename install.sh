@@ -25,7 +25,7 @@ if [ \("$1" == ""\) -o \("$2" == ""\) -o \("$3" == ""\) ]; then
 else
 
     echo "${GREEN}Checking if directory '/bootstrap/cache' exists${NC}"
-    if [ \(-d "$(pwd)/bootstrap/cache"\) ];
+    if [ \(-d "bootstrap/cache"\) ];
     then
         echo "${GREEN}Directory already exists!${NC}"
     else
