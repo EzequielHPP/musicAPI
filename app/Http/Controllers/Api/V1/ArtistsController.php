@@ -4,19 +4,23 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Artists;
 use App\Models\Albums;
+use App\Models\Tracks;
 
-class AlbumsController extends Controller
+class ArtistsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
-        echo 'hello';
+        $artistsObject = Artists::all();
+
+
+        return response()->json($artistsObject);
     }
 
     /**
@@ -44,16 +48,15 @@ class AlbumsController extends Controller
      * Display the specified resource.
      *
      * @param  string $hash
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($artist_hash, $album_hash = null)
+    public function show($hash)
     {
-        if ($album_hash == null) {
-            $album_hash = $artist_hash;
-        }
-        $album = Albums::where('_hash', $album_hash)->get()->load('images', 'genres');
 
-        return json_encode($album);
+        $artistObject = Artists::where('_hash', $hash);
+        $artist = $artistObject->first()->load('image');
+
+        return response()->json($artist);
     }
 
     /**
@@ -85,26 +88,22 @@ class AlbumsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($hash)
     {
         //
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show all albums.
      *
-     * @param $artist_hash
-     * @param null $album_hash
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
+     * @param string $hash
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function tracks($artist_hash, $album_hash = null)
+    public function showAlbums($hash)
     {
-        if ($album_hash == null) {
-            $album_hash = $artist_hash;
-        }
-        $album = Albums::where('_hash', $album_hash)->first();
+        $artistObject = Artists::where('_hash', $hash);
+        $artist = $artistObject->first();
 
-        return response()->json($album->load('tracks'));
+        return response()->json($artist->albums->load('images', 'genres'));
     }
 }

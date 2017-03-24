@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Artists;
 use App\Models\Albums;
+use App\Models\Tracks;
 
-class AlbumsController extends Controller
+class TracksController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +17,8 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        //
-        echo 'hello';
+
+        return response()->json(Tracks::all());
     }
 
     /**
@@ -32,7 +34,7 @@ class AlbumsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,26 +45,31 @@ class AlbumsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string $hash
+     * @param  string $artist_hash
+     * @param string $album_hash
+     * @param string $track_hash
      * @return \Illuminate\Http\Response
      */
-    public function show($artist_hash, $album_hash = null)
+    public function show($artist_hash, $album_hash = null, $track_hash = null)
     {
-        if ($album_hash == null) {
-            $album_hash = $artist_hash;
+        if($track_hash == null){
+            $track_hash = $artist_hash;
         }
-        $album = Albums::where('_hash', $album_hash)->get()->load('images', 'genres');
 
-        return json_encode($album);
+        $trackObject = Tracks::where('_hash', $track_hash);
+        $track = $trackObject->first();
+
+        return response()->json($track);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $hash
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($hash)
     {
         //
     }
@@ -70,11 +77,11 @@ class AlbumsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $hash
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $hash)
     {
         //
     }
@@ -82,29 +89,11 @@ class AlbumsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $hash
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($hash)
     {
         //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $artist_hash
-     * @param null $album_hash
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function tracks($artist_hash, $album_hash = null)
-    {
-        if ($album_hash == null) {
-            $album_hash = $artist_hash;
-        }
-        $album = Albums::where('_hash', $album_hash)->first();
-
-        return response()->json($album->load('tracks'));
     }
 }

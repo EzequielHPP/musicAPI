@@ -16,4 +16,9 @@ class Artists extends Model
     {
         return $this->belongsToMany(Albums::class);
     }
+
+    public function image()
+    {
+        return $this->hasOne(Images::class,'id','image_id');
+    }
 }

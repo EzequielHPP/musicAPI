@@ -22,7 +22,7 @@ class Albums extends Model
      */
     public function artists()
     {
-        return $this->belongsToMany(Artists::class);
+        return $this->hasMany(Artists::class);
     }
 
     /**
