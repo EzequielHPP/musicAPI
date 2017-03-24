@@ -12,7 +12,7 @@ class Albums extends Model
     /**
      * Get the image associated with the albums.
      */
-    public function image()
+    public function images()
     {
         return $this->hasMany(Images::class);
     }

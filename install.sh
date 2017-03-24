@@ -92,6 +92,9 @@ else
     echo "${GREEN}Running migrations${NC}"
     php artisan migrate
 
+    echo "${GREEN}Seeding the DB${NC}"
+    php artisan db:seed
+
     echo "${GREEN}Finished${NC}"
 
 fi
