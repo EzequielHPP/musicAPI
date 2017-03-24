@@ -6,9 +6,10 @@
  * Time: 23:51
  */
 
-$factory->define(App\v1\Models\Genres::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Genres::class, function (Faker\Generator $faker) {
 
     return [
-        'title' => $faker->name
+        'title' => $faker->name,
+        '_hash' => md5(uniqid(rand()+time(), true))
     ];
 });

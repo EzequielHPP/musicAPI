@@ -15,6 +15,7 @@ class CreateAlbumsTable extends Migration
     {
         Schema::create('albums', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('_hash')->unique();
             $table->string('name');
             $table->date('release_date');
             $table->timestamps();

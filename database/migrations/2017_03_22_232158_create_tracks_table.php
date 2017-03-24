@@ -15,6 +15,7 @@ class CreateTracksTable extends Migration
     {
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('_hash')->unique();
             $table->integer('album_id')->unsigned();
             $table->string('title');
             $table->integer('length');

@@ -14,3 +14,17 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::group(['prefix' => 'api/v1'], function () {
+
+    Route::middleware('auth:api')->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    /**
+     * Albums actions
+     */
+    Route::get('albums', 'Api\V1\AlbumsController@index');
+    Route::get('albums/{id}', 'Api\V1\AlbumsController@index');
+});

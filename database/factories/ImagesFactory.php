@@ -6,7 +6,7 @@
  * Time: 23:51
  */
 
-$factory->define(App\v1\Models\Images::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Images::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,
