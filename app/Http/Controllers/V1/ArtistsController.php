@@ -85,12 +85,32 @@ class ArtistsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Controllers\V1\Requests\AuthorizationHeader $request
-     * @param  int $id
+     * @param  int $hash
      * @return \Illuminate\Http\Response
      */
-    public function update(AuthorizationHeader $request, $id)
+    public function update(AuthorizationHeader $request, $hash)
     {
-        //
+        // Validate request and data sent
+        $artist = $this->_validateArtistAndReturnObject($request, $hash);
+
+        // Is the request valid then save and show artist
+        if (is_object($artist)) {
+            $artist->name = $request->name;
+
+            $artist->save();
+
+            //Did we get images?
+            if ($request->image !== null) {
+                $this->_processImage($request->image, $artist->id);
+            }
+
+            // Load extra fields
+            $artist->load('image');
+
+            return response()->json($artist);
+        }
+
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -137,6 +157,30 @@ class ArtistsController extends Controller
         $artist->tracks;
 
         return response()->json($artist);
+    }
+
+    /**
+     * Validate sent data and check if required parameters could be sent
+     * Return Artist object or false
+     *
+     * @param object $sentObject
+     * @param string $hash
+     * @return object|bool
+     */
+    private function _validateArtistAndReturnObject($sentObject, $hash)
+    {
+        $return = $this->_validateArtist($sentObject);
+
+        if (!$return) {
+            return false;
+        }
+
+        $artist = Artists::where('_hash', $hash)->first();
+        if ($artist == null) {
+            return false;
+        }
+
+        return $artist;
     }
 
     /**
@@ -200,20 +244,26 @@ class ArtistsController extends Controller
             $image = json_decode($image);
         }
 
+
         if (property_exists($image, 'name') && property_exists($image, 'file') && property_exists($image, 'width') && property_exists($image, 'height')) {
 
-            // @TODO: move this another controller (Images Controller)
-            $savedImage = new Images;
-            $savedImage->name = $image->name;
-            $savedImage->file = $image->file;
-            $savedImage->width = $image->width;
-            $savedImage->height = $image->height;
-            $savedImage->save();
 
-            if($artist_id != null) {
-                $album = Artists::find($artist_id);
-                $album->image()->detach();
-                $album->images()->attach($savedImage->id);
+            // @TODO: move this another controller (Images Controller)
+            // Check if image already exists
+            $savedImage = Images::where('file',$image->file)->first();
+            if($savedImage == null) {
+                $savedImage = new Images;
+                $savedImage->name = $image->name;
+                $savedImage->file = $image->file;
+                $savedImage->width = $image->width;
+                $savedImage->height = $image->height;
+                $savedImage->save();
+            }
+
+            if ($artist_id != null) {
+                $artist = Artists::find($artist_id);
+                $artist->image_id = $savedImage->id;
+                $artist->save();
             }
 
             return $savedImage->id;

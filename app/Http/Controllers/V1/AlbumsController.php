@@ -120,6 +120,11 @@ class AlbumsController extends Controller
                 $this->_processImages($request->images, $album->id);
             }
 
+            //Did we get artists?
+            if ($request->artists !== null) {
+                $this->_processArtists($request->artists, $album->id);
+            }
+
             // Load extra fields
             $album->load('artists', 'images', 'genres');
 
@@ -347,17 +352,54 @@ class AlbumsController extends Controller
             if (property_exists($image, 'name') && property_exists($image, 'file') && property_exists($image, 'width') && property_exists($image, 'height')) {
 
                 // @TODO: move this another controller (Images Controller)
-                $savedImage = new Images;
-                $savedImage->name = $image->name;
-                $savedImage->file = $image->file;
-                $savedImage->width = $image->width;
-                $savedImage->height = $image->height;
-                $savedImage->save();
-
+                // Check if image already exists
+                $savedImage = Images::where('file',$image->file)->first();
+                if($savedImage == null) {
+                    $savedImage = new Images;
+                    $savedImage->name = $image->name;
+                    $savedImage->file = $image->file;
+                    $savedImage->width = $image->width;
+                    $savedImage->height = $image->height;
+                    $savedImage->save();
+                }
 
                 $album->images()->attach($savedImage->id);
                 $attached++;
             }
+        }
+
+        return array('attached' => $attached);
+    }
+
+    /**
+     * Process artists sent and attach them to required album
+     *
+     * @param array|string $artists
+     * @param integer $album_id
+     * @return array
+     */
+    private function _processArtists($artists, $album_id)
+    {
+
+        if (!is_array($artists)) {
+            $artists = json_decode($artists);
+        }
+
+        $attached = 0;
+
+        $album = Albums::find($album_id);
+        $album->artists()->detach();
+
+        foreach ($artists as $artist) {
+
+            // @TODO: move this another controller (Images Controller)
+            // Check if image already exists
+            $savedArtist = Artists::where('_hash',$artist)->first();
+            if($savedArtist != null) {
+                $album->artists()->attach($savedArtist->id);
+            }
+
+            $attached++;
         }
 
         return array('attached' => $attached);
