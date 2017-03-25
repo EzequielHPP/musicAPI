@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Models\Images;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Artists;
@@ -33,7 +34,35 @@ class ArtistsController extends Controller
      */
     public function store(AuthorizationHeader $request)
     {
-        //
+        // Validate request and data sent
+        $validArtist = $this->_validateArtist($request, true);
+
+        // Is the request valid then save and show artist
+        if (!is_array($validArtist) && $validArtist == true) {
+
+            $imageId = $this->_processImage($request->image);
+
+            if(!is_array($imageId)) {
+                $artist = new Artists;
+
+                $artist->name = $request->name;
+                $artist->image_id = $imageId;
+                $artist->_hash = md5(uniqid(rand() + time(), true));
+
+                $artist->save();
+
+                $returnArtist = $this->_loadArtist($artist->_hash);
+
+                return response()->json($returnArtist);
+            }
+
+            $validArtist = $imageId;
+        }
+
+        if (is_array($validArtist)) {
+            return response()->json($validArtist);
+        }
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -108,5 +137,88 @@ class ArtistsController extends Controller
         $artist->tracks;
 
         return response()->json($artist);
+    }
+
+    /**
+     * Validate object sent as artist
+     *
+     * @param $sentObject
+     * @param bool $forCreation
+     * @return bool
+     */
+
+    private function _validateArtist($sentObject, $forCreation = false)
+    {
+        if ($sentObject->name === null) {
+            return false;
+        }
+        if ($sentObject->image === null) {
+            return false;
+        }
+
+        // This checks for necessary fields for the creation of the albums
+        if ($forCreation) {
+
+            // Check if album already exists
+            $tmpArtist = Artists::where('name', $sentObject->name)->first();
+            if ($tmpArtist !== null) {
+                return array('status' => 'failed', 'message' => 'Artist already exists');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Load Artist
+     * @param $hash
+     * @return bool
+     */
+    private function _loadArtist($hash)
+    {
+
+        if ($hash == null) {
+            return false;
+        }
+        $album = Artists::where('_hash', $hash)->get();
+        $album->load('image');
+
+        return $album;
+    }
+
+    /**
+     * Process the image that was sent and attach to required artist
+     *
+     * @param array|string $image
+     * @param integer $artist_id
+     * @return array
+     */
+    private function _processImage($image, $artist_id = null)
+    {
+
+        if (!is_object($image)) {
+            $image = json_decode($image);
+        }
+
+        if (property_exists($image, 'name') && property_exists($image, 'file') && property_exists($image, 'width') && property_exists($image, 'height')) {
+
+            // @TODO: move this another controller (Images Controller)
+            $savedImage = new Images;
+            $savedImage->name = $image->name;
+            $savedImage->file = $image->file;
+            $savedImage->width = $image->width;
+            $savedImage->height = $image->height;
+            $savedImage->save();
+
+            if($artist_id != null) {
+                $album = Artists::find($artist_id);
+                $album->image()->detach();
+                $album->images()->attach($savedImage->id);
+            }
+
+            return $savedImage->id;
+        }
+
+        return array('status' => 'failed', 'message' => 'Invalid image submitted');
     }
 }

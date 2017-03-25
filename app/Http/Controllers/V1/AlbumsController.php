@@ -53,7 +53,7 @@ class AlbumsController extends Controller
 
             // Did we attach all the artists?
             // If Not then delete album and throw error
-            if($attachedArtists == false){
+            if ($attachedArtists == false) {
                 $album->forceDelete();
                 return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
             }
@@ -67,7 +67,7 @@ class AlbumsController extends Controller
             return response()->json($returnAlbum);
         }
 
-        if(is_array($validAlbum)){
+        if (is_array($validAlbum)) {
             return response()->json($validAlbum);
         }
         return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
@@ -223,8 +223,8 @@ class AlbumsController extends Controller
             }
 
             // Check if album already exists
-            $tmpAlbum = Albums::where('name',$sentObject->name)->where('release_date',$sentObject->release_date)->first();
-            if($tmpAlbum !== null){
+            $tmpAlbum = Albums::where('name', $sentObject->name)->where('release_date', $sentObject->release_date)->first();
+            if ($tmpAlbum !== null) {
                 $sentArtists = $sentObject->artist;
                 if (!is_array($sentArtists)) {
                     $sentArtists = json_decode($sentArtists);
@@ -232,13 +232,13 @@ class AlbumsController extends Controller
                 $albumArtists = $tmpAlbum->artists;
 
                 $artistsFound = 0;
-                foreach($albumArtists as $tmpArtist) {
+                foreach ($albumArtists as $tmpArtist) {
                     if (in_array($tmpArtist->_hash, $sentArtists)) {
                         $artistsFound++;
                     }
                 }
 
-                if($artistsFound == sizeof($albumArtists)){
+                if ($artistsFound == sizeof($albumArtists)) {
                     return array('status' => 'failed', 'message' => 'Album already exists');
                 }
             }
