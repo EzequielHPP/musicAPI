@@ -44,4 +44,20 @@ class Albums extends Model
     {
         return $this->belongsToMany(Genres::class);
     }
+
+    // this will delete all the child relations
+    public static function boot()
+    {
+        parent::boot();
+
+        Albums::deleting(function($album) {
+            foreach(['tracks'] as $relation)
+            {
+                foreach($album->{$relation} as $item)
+                {
+                    $item->delete();
+                }
+            }
+        });
+    }
 }

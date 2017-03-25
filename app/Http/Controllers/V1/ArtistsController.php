@@ -122,7 +122,17 @@ class ArtistsController extends Controller
      */
     public function destroy(AuthorizationHeader $request, $hash)
     {
-        //
+        // Validate request and data sent
+        $artist = $this->_validateArtistAndReturnObject($request, $hash);
+
+        // Is the request valid then save and show artist
+        if (is_object($artist)) {
+            $artist->delete();
+
+            return response()->json(array('status' => 'success', 'message' => 'Artist removed'));
+        }
+
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'));
     }
 
     /**

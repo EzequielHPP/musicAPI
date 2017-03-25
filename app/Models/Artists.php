@@ -32,4 +32,20 @@ class Artists extends Model
     {
         return $this->hasOne(Images::class,'id','image_id');
     }
+
+    // this will delete all the child relations
+    public static function boot()
+    {
+        parent::boot();
+
+        Artists::deleting(function($artist) {
+            foreach(['tracks', 'albums'] as $relation)
+            {
+                foreach($artist->{$relation} as $item)
+                {
+                    $item->delete();
+                }
+            }
+        });
+    }
 }
