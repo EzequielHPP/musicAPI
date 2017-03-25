@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Albums;
 use App\Http\Controllers\V1\Requests\CreateAlbum;
+use App\Http\Controllers\V1\Requests\AuthorizationHeader;
 
 class AlbumsController extends Controller
 {
@@ -14,7 +15,7 @@ class AlbumsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AuthorizationHeader $request)
     {
         $albums = Albums::all();
 
@@ -27,7 +28,7 @@ class AlbumsController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorizationHeader $request)
     {
         //
     }
@@ -38,7 +39,7 @@ class AlbumsController extends Controller
      * @param  string $hash
      * @return \Illuminate\Http\Response
      */
-    public function show($artist_hash, $album_hash = null)
+    public function show(AuthorizationHeader $request, $artist_hash, $album_hash = null)
     {
         if ($album_hash == null) {
             $album_hash = $artist_hash;
