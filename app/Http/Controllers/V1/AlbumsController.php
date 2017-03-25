@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Models\Artists;
 use App\Models\Genres;
 use App\Models\Images;
 use Illuminate\Http\Request;
@@ -34,7 +35,42 @@ class AlbumsController extends Controller
      */
     public function store(AuthorizationHeader $request)
     {
-        //
+        // Validate request and data sent
+        $validAlbum = $this->_validateAlbum($request, true);
+
+        // Is the request valid then save and show album
+        if (!is_array($validAlbum) && $validAlbum == true) {
+
+            $album = new Albums;
+
+            $album->name = $request->name;
+            $album->_hash = md5(uniqid(rand() + time(), true));
+            $album->release_date = $request->release_date;
+
+            $album->save();
+
+            $attachedArtists = $this->_processArtist($request->artist, $album->id);
+
+            // Did we attach all the artists?
+            // If Not then delete album and throw error
+            if($attachedArtists == false){
+                $album->forceDelete();
+                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+            }
+
+            $this->_processGenres($request->genres, $album->id);
+
+            $this->_processImages($request->images, $album->id);
+
+            $returnAlbum = $this->_loadAlbum($album->_hash);
+
+            return response()->json($returnAlbum);
+        }
+
+        if(is_array($validAlbum)){
+            return response()->json($validAlbum);
+        }
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -49,8 +85,8 @@ class AlbumsController extends Controller
         if ($album_hash == null) {
             $album_hash = $artist_hash;
         }
-        $album = Albums::where('_hash', $album_hash)->get();
-        $album->load('artists', 'images', 'genres');
+
+        $album = $this->_loadAlbum($album_hash);
 
         return json_encode($album);
     }
@@ -132,10 +168,9 @@ class AlbumsController extends Controller
      */
     private function _validateAlbumAndReturnObject($sentObject, $hash)
     {
-        if ($sentObject->name === null) {
-            return false;
-        }
-        if ($sentObject->release_date === null) {
+        $return = $this->_validateAlbum($sentObject);
+
+        if (!$return) {
             return false;
         }
 
@@ -145,6 +180,107 @@ class AlbumsController extends Controller
         }
 
         return $album;
+    }
+
+    private function _loadAlbum($hash)
+    {
+
+        if ($hash == null) {
+            return false;
+        }
+        $album = Albums::where('_hash', $hash)->get();
+        $album->load('artists', 'images', 'genres');
+
+        return $album;
+    }
+
+    /**
+     * Validate object sent as album
+     *
+     * @param $sentObject
+     * @param bool $forCreation
+     * @return bool
+     */
+    private function _validateAlbum($sentObject, $forCreation = false)
+    {
+        if ($sentObject->name === null) {
+            return false;
+        }
+        if ($sentObject->release_date === null) {
+            return false;
+        }
+
+        // This checks for necessary fields for the creation of the albums
+        if ($forCreation) {
+            if ($sentObject->genres === null) {
+                return false;
+            }
+            if ($sentObject->images === null) {
+                return false;
+            }
+            if ($sentObject->artist === null) {
+                return false;
+            }
+
+            // Check if album already exists
+            $tmpAlbum = Albums::where('name',$sentObject->name)->where('release_date',$sentObject->release_date)->first();
+            if($tmpAlbum !== null){
+                $sentArtists = $sentObject->artist;
+                if (!is_array($sentArtists)) {
+                    $sentArtists = json_decode($sentArtists);
+                }
+                $albumArtists = $tmpAlbum->artists;
+
+                $artistsFound = 0;
+                foreach($albumArtists as $tmpArtist) {
+                    if (in_array($tmpArtist->_hash, $sentArtists)) {
+                        $artistsFound++;
+                    }
+                }
+
+                if($artistsFound == sizeof($albumArtists)){
+                    return array('status' => 'failed', 'message' => 'Album already exists');
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Process artist sent and attach to required album
+     *
+     * @param array|string $artists
+     * @param integer $album_id
+     * @return array
+     */
+    private function _processArtist($artists, $album_id)
+    {
+
+        if (!is_array($artists)) {
+            $artists = json_decode($artists);
+        }
+
+        $attached = 0;
+
+        $album = Albums::find($album_id);
+        $album->artists()->detach();
+
+        foreach ($artists as $artist) {
+            // Does artist exist?
+            // Associate it, if not then return false
+            $realArtist = Artists::where('_hash', $artist)->first();
+
+            if ($realArtist !== null) {
+                $album->artists()->attach($realArtist->id);
+                $attached++;
+            } else {
+                $album->artists()->detach();
+                return false;
+            }
+        }
+
+        return array('attached' => $attached);
     }
 
     /**
@@ -171,11 +307,12 @@ class AlbumsController extends Controller
             // If not then generate it and associate
             // else associate
 
+            // @TODO: move this another controller (Genres Controller)
             $savedGenre = Genres::where('title', $genre)->first();
             if ($savedGenre == null) {
                 $savedGenre = new Genres;
                 $savedGenre->title = $genre;
-                $savedGenre->_hash = md5(uniqid(rand()+time(), true));
+                $savedGenre->_hash = md5(uniqid(rand() + time(), true));
                 $savedGenre->save();
             }
 
@@ -189,7 +326,7 @@ class AlbumsController extends Controller
     /**
      * Process images sent and attach them to required album
      *
-     * @param array|string $genres
+     * @param array|string $images
      * @param integer $album_id
      * @return array
      */
@@ -208,6 +345,8 @@ class AlbumsController extends Controller
         foreach ($images as $image) {
 
             if (property_exists($image, 'name') && property_exists($image, 'file') && property_exists($image, 'width') && property_exists($image, 'height')) {
+
+                // @TODO: move this another controller (Images Controller)
                 $savedImage = new Images;
                 $savedImage->name = $image->name;
                 $savedImage->file = $image->file;
