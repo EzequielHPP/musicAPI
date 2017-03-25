@@ -24,12 +24,48 @@ class TracksController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        // Validate request and data sent
+        $validTrack = $this->_validateTrack($request);
+
+        // Is the request valid then save and show album
+        if (!is_array($validTrack) && $validTrack == true) {
+
+            $album = Albums::where('_hash', $request->album)->first();
+
+            $track = new Tracks;
+
+            $track->_hash = md5(uniqid(rand() + time(), true));
+            $track->album_id = $album->id;
+            $track->title = $request->title;
+            $track->length = $request->length;
+            $track->disc_number = $request->disc_number;
+            $track->track_order = $request->track_order;
+
+            $track->save();
+
+            $attachedArtists = $this->_processArtists($request->artists, $track->id);
+
+            // Did we attach all the artists?
+            // If Not then delete album and throw error
+            if ($attachedArtists == false) {
+                $track->forceDelete();
+                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+            }
+
+            $returnTrack = $this->_loadTrack($track->_hash);
+
+            return response()->json($returnTrack);
+        }
+
+        if (is_array($validTrack)) {
+            return response()->json($validTrack);
+        }
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -42,17 +78,11 @@ class TracksController extends Controller
      */
     public function show($artist_hash, $album_hash = null, $track_hash = null)
     {
-        if($track_hash == null){
+        if ($track_hash == null) {
             $track_hash = $artist_hash;
         }
 
-        $trackObject = Tracks::where('_hash', $track_hash);
-        $track = $trackObject->first();
-        $track->load(['artists' => function ($query) {
-            $query->with('image');
-        }, 'album' => function ($query) {
-            $query->with('images');
-        }]);
+        $track = $this->_loadTrack($track_hash);
 
         return response()->json($track);
 
@@ -61,8 +91,8 @@ class TracksController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $hash
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $hash
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $hash)
@@ -73,11 +103,123 @@ class TracksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $hash
+     * @param  int $hash
      * @return \Illuminate\Http\Response
      */
     public function destroy($hash)
     {
         //
+    }
+
+
+    /**
+     * Validate object sent as a Track
+     *
+     * @param $sentObject
+     * @param bool $forCreation
+     * @return bool
+     */
+    private function _validateTrack($sentObject)
+    {
+        if ($sentObject->album === null) {
+            return false;
+        }
+        if ($sentObject->title === null) {
+            return false;
+        }
+        if ($sentObject->length === null) {
+            return false;
+        }
+        if ($sentObject->disc_number === null) {
+            return false;
+        }
+        if ($sentObject->track_order === null) {
+            return false;
+        }
+        if ($sentObject->artists === null) {
+            return false;
+        }
+
+        $album = Albums::where('_hash', $sentObject->album)->first();
+        if ($album == null) {
+            return array('status' => 'failed', 'message' => 'Invalid Album submitted');
+        }
+
+        $artistExist = $this->_processArtists($sentObject->artists);
+        if ($artistExist == false) {
+            return array('status' => 'failed', 'message' => 'Invalid Artists submitted');
+        }
+
+        // Check if track already exists
+        $tmpTrack = Tracks::where('title', $sentObject->title)->where('album_id', $album->id)->first();
+        if ($tmpTrack !== null) {
+            return array('status' => 'failed', 'message' => 'Track already exists');
+        }
+
+        // Check if track already exists is position
+        $tmpTrack = Tracks::where('track_order', $sentObject->track_order)->where('album_id', $album->id)->first();
+        if ($tmpTrack !== null) {
+            return array('status' => 'failed', 'message' => 'Other track already exists on position '.$sentObject->track_order);
+        }
+
+        return true;
+    }
+
+    /**
+     * Process artist sent and attach to required album
+     *
+     * @param array|string $artists
+     * @param null|integer $track_id
+     * @return array
+     * @internal param int|null $album_id
+     */
+    private function _processArtists($artists, $track_id = null)
+    {
+
+        if (!is_array($artists)) {
+            $artists = json_decode($artists);
+        }
+
+        $attached = 0;
+
+        if ($track_id !== null) {
+            $track = Tracks::find($track_id);
+            $track->artists()->detach();
+        }
+
+        foreach ($artists as $artist) {
+            // Does artist exist?
+            // Associate it, if not then return false
+            $realArtist = Artists::where('_hash', $artist)->first();
+
+            if ($realArtist !== null) {
+                if ($track_id !== null) {
+                    $track->artists()->attach($realArtist->id);
+                    $attached++;
+                }
+            } else {
+                if ($track_id !== null) {
+                    $track->artists()->detach();
+                }
+                return false;
+            }
+        }
+        if ($track_id === null) {
+            return true;
+        }
+        return array('attached' => $attached);
+    }
+
+    private function _loadTrack($hash)
+    {
+        $trackObject = Tracks::where('_hash', $hash);
+        $track = $trackObject->first();
+        $track->load(['artists' => function ($query) {
+            $query->with('image');
+        }, 'album' => function ($query) {
+            $query->with('images');
+        }]);
+
+        return $track;
     }
 }
