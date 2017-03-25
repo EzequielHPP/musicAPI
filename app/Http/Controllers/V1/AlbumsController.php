@@ -138,12 +138,21 @@ class AlbumsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Http\Controllers\V1\Requests\AuthorizationHeader $request
-     * @param  int $id
+     * @param  string $hash
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AuthorizationHeader $request, $id)
+    public function destroy(AuthorizationHeader $request, $hash)
     {
-        //
+        $album = Albums::where('_hash', $hash)->first();
+
+        // Is the album valid then delete album
+        if (is_object($album) && $album !== null) {
+            $album->delete();
+
+            return response()->json(array('status' => 'success', 'message' => 'Album removed'));
+        }
+
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid album submitted'));
     }
 
     /**

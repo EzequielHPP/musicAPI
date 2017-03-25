@@ -128,11 +128,10 @@ class TracksController extends Controller
      */
     public function destroy(AuthorizationHeader $request, $hash)
     {
-        // Validate request and data sent
-        $track = $this->_validateTrackAndReturnObject($request, $hash);
+        $track = Tracks::where('_hash', $hash)->first();
 
-        // Is the request valid then save and show artist
-        if (is_object($track)) {
+        // Is the track valid then delete track
+        if (is_object($track) && $track !== null) {
             $track->delete();
 
             return response()->json(array('status' => 'success', 'message' => 'Track removed'));

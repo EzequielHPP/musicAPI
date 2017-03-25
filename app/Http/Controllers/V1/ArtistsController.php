@@ -117,16 +117,15 @@ class ArtistsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Http\Controllers\V1\Requests\AuthorizationHeader $request
-     * @param  int $id
+     * @param  string $hash
      * @return \Illuminate\Http\Response
      */
     public function destroy(AuthorizationHeader $request, $hash)
     {
-        // Validate request and data sent
-        $artist = $this->_validateArtistAndReturnObject($request, $hash);
+        $artist = Artists::where('_hash', $hash)->first();
 
-        // Is the request valid then save and show artist
-        if (is_object($artist)) {
+        // Is the artist valid then delete artist
+        if (is_object($artist) && $artist !== null) {
             $artist->delete();
 
             return response()->json(array('status' => 'success', 'message' => 'Artist removed'));
