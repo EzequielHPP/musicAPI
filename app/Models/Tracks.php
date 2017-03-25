@@ -16,4 +16,12 @@ class Tracks extends Model
     {
         return $this->belongsTo(Albums::class);
     }
+
+    /**
+     * Tracks belongs to Artists.
+     */
+    public function artists()
+    {
+        return $this->belongsToMany(Artists::class);
+    }
 }

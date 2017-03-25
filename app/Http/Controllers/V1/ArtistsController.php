@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,16 +21,6 @@ class ArtistsController extends Controller
 
 
         return response()->json($artistsObject);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -57,17 +47,6 @@ class ArtistsController extends Controller
         $artist = $artistObject->first()->load('image');
 
         return response()->json($artist);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -103,7 +82,25 @@ class ArtistsController extends Controller
     {
         $artistObject = Artists::where('_hash', $hash);
         $artist = $artistObject->first();
+        $artist->load('image');
+        $artist->albums->load('images', 'genres');
 
-        return response()->json($artist->albums->load('images', 'genres'));
+        return response()->json($artist);
+    }
+
+    /**
+     * Show all tracks.
+     *
+     * @param string $hash
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showTracks($hash)
+    {
+        $artistObject = Artists::where('_hash', $hash);
+        $artist = $artistObject->first();
+        $artist->load('image');
+        $artist->tracks;
+
+        return response()->json($artist);
     }
 }

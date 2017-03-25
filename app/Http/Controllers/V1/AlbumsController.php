@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Albums;
+use App\Http\Controllers\V1\Requests\CreateAlbum;
 
 class AlbumsController extends Controller
 {
@@ -15,18 +16,9 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        //
-        echo 'hello';
-    }
+        $albums = Albums::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return json_encode($albums);
     }
 
     /**
@@ -51,32 +43,22 @@ class AlbumsController extends Controller
         if ($album_hash == null) {
             $album_hash = $artist_hash;
         }
-        $album = Albums::where('_hash', $album_hash)->get()->load('images', 'genres');
+        $album = Albums::where('_hash', $album_hash)->get();
+        $album->load('artists', 'images', 'genres');
 
         return json_encode($album);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  string $hash
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateAlbum $request, $hash)
     {
-        //
+        var_dump('asdasd');
     }
 
     /**
@@ -91,20 +73,18 @@ class AlbumsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show all tracks.
      *
-     * @param $artist_hash
-     * @param null $album_hash
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
+     * @param string $hash
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function tracks($artist_hash, $album_hash = null)
+    public function showTracks($hash)
     {
-        if ($album_hash == null) {
-            $album_hash = $artist_hash;
-        }
-        $album = Albums::where('_hash', $album_hash)->first();
+        $albumObject = Albums::where('_hash', $hash);
+        $album = $albumObject->first();
+        $album->load('images');
+        $album->tracks;
 
-        return response()->json($album->load('tracks'));
+        return response()->json($album);
     }
 }

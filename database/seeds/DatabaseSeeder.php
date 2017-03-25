@@ -47,10 +47,12 @@ class DatabaseSeeder extends Seeder
                     $nextTrack = 1;
 
                     // Create the tracks for this album
-                    factory(App\Models\Tracks::class, rand(2, 10))->make()->each(function ($f) use ($nextTrack, $album) {
-                        $f->track_order = $nextTrack;
-                        $f->album_id = $album->id;
-                        $f->save();
+                    factory(App\Models\Tracks::class, rand(2, 10))->make()->each(function ($tracks) use ($nextTrack, $album) {
+                        $tracks->track_order = $nextTrack;
+                        $tracks->album_id = $album->id;
+                        $tracks->save();
+
+                        $tracks->artists()->attach($this->artist->id);
                     });
                 });
             });

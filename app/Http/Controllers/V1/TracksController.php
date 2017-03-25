@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,16 +19,6 @@ class TracksController extends Controller
     {
 
         return response()->json(Tracks::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -58,20 +48,14 @@ class TracksController extends Controller
 
         $trackObject = Tracks::where('_hash', $track_hash);
         $track = $trackObject->first();
+        $track->load(['artists' => function ($query) {
+            $query->with('image');
+        }, 'album' => function ($query) {
+            $query->with('images');
+        }]);
 
         return response()->json($track);
 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $hash
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($hash)
-    {
-        //
     }
 
     /**

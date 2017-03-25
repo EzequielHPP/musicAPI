@@ -17,6 +17,14 @@ class Artists extends Model
         return $this->belongsToMany(Albums::class);
     }
 
+    /**
+     * Get the Tracks associated with the artist.
+     */
+    public function tracks()
+    {
+        return $this->belongsToMany(Tracks::class);
+    }
+
     public function image()
     {
         return $this->hasOne(Images::class,'id','image_id');
