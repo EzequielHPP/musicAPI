@@ -171,7 +171,7 @@ class ArtistsController extends Controller
     {
         $return = $this->_validateArtist($sentObject);
 
-        if (!$return) {
+        if (!$return || is_array($return)) {
             return false;
         }
 

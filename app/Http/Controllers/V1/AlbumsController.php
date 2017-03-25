@@ -175,7 +175,7 @@ class AlbumsController extends Controller
     {
         $return = $this->_validateAlbum($sentObject);
 
-        if (!$return) {
+        if (!$return || is_array($return)) {
             return false;
         }
 

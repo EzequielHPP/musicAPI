@@ -97,7 +97,25 @@ class TracksController extends Controller
      */
     public function update(Request $request, $hash)
     {
-        //
+        // Validate request and data sent
+        $track = $this->_validateTrackAndReturnObject($request, $hash);
+
+        // Is the request valid then save and show artist
+        if (is_object($track)) {
+            $track->title = $request->title;
+            $track->length = $request->length;
+            $track->disc_number = $request->disc_number;
+            $track->track_order = $request->track_order;
+
+            $track->save();
+
+            // Reload track
+            $track = $this->_loadTrack($track->_hash);
+
+            return response()->json($track);
+        }
+
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -116,12 +134,16 @@ class TracksController extends Controller
      * Validate object sent as a Track
      *
      * @param $sentObject
-     * @param bool $forCreation
+     * @param bool $skipArtistsAndAlbum
      * @return bool
+     * @internal param bool $forCreation
      */
-    private function _validateTrack($sentObject)
+    private function _validateTrack($sentObject, $skipArtistsAndAlbum = false)
     {
-        if ($sentObject->album === null) {
+        if (!$skipArtistsAndAlbum && $sentObject->album === null) {
+            return false;
+        }
+        if (!$skipArtistsAndAlbum && $sentObject->artists === null) {
             return false;
         }
         if ($sentObject->title === null) {
@@ -136,33 +158,58 @@ class TracksController extends Controller
         if ($sentObject->track_order === null) {
             return false;
         }
-        if ($sentObject->artists === null) {
-            return false;
-        }
 
-        $album = Albums::where('_hash', $sentObject->album)->first();
-        if ($album == null) {
-            return array('status' => 'failed', 'message' => 'Invalid Album submitted');
-        }
+        if(!$skipArtistsAndAlbum) {
+            $album = Albums::where('_hash', $sentObject->album)->first();
+            if ($album == null) {
+                return array('status' => 'failed', 'message' => 'Invalid Album submitted');
+            }
 
-        $artistExist = $this->_processArtists($sentObject->artists);
-        if ($artistExist == false) {
-            return array('status' => 'failed', 'message' => 'Invalid Artists submitted');
-        }
+            $artistExist = $this->_processArtists($sentObject->artists);
+            if ($artistExist == false) {
+                return array('status' => 'failed', 'message' => 'Invalid Artists submitted');
+            }
 
-        // Check if track already exists
-        $tmpTrack = Tracks::where('title', $sentObject->title)->where('album_id', $album->id)->first();
-        if ($tmpTrack !== null) {
-            return array('status' => 'failed', 'message' => 'Track already exists');
-        }
+            // Check if track already exists
+            $tmpTrack = Tracks::where('title', $sentObject->title)->where('album_id', $album->id)->first();
+            if ($tmpTrack !== null) {
+                return array('status' => 'failed', 'message' => 'Track already exists');
+            }
 
-        // Check if track already exists is position
-        $tmpTrack = Tracks::where('track_order', $sentObject->track_order)->where('album_id', $album->id)->first();
-        if ($tmpTrack !== null) {
-            return array('status' => 'failed', 'message' => 'Other track already exists on position '.$sentObject->track_order);
+            // Check if track already exists is position
+            $tmpTrack = Tracks::where('track_order', $sentObject->track_order)->where('album_id', $album->id)->first();
+            if ($tmpTrack !== null) {
+                return array('status' => 'failed', 'message' => 'Other track already exists on position ' . $sentObject->track_order);
+            }
         }
 
         return true;
+    }
+
+
+
+    /**
+     * Validate sent data and check if required parameters could be sent
+     * Return Artist object or false
+     *
+     * @param object $sentObject
+     * @param string $hash
+     * @return object|bool
+     */
+    private function _validateTrackAndReturnObject($sentObject, $hash)
+    {
+        $return = $this->_validateTrack($sentObject, true);
+
+        if (!$return || is_array($return)) {
+            return false;
+        }
+
+        $track = Tracks::where('_hash', $hash)->first();
+        if ($track == null) {
+            return false;
+        }
+
+        return $track;
     }
 
     /**
