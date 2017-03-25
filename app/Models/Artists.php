@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Artists extends Model
 {
     // Laravel Model Configuration
+    use SoftDeletes;
     protected $table = 'artists'; // Table Name
+    protected $dates = ['deleted_at'];
 
     /**
      * Get the Albums associated with the artist.

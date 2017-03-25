@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Http\Controllers\V1\Requests\AuthorizationHeader;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Artists;
@@ -15,7 +16,7 @@ class TracksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AuthorizationHeader $request)
     {
 
         return response()->json(Tracks::all());
@@ -24,10 +25,10 @@ class TracksController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\AuthorizationHeader $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorizationHeader $request)
     {
         // Validate request and data sent
         $validTrack = $this->_validateTrack($request);
@@ -76,7 +77,7 @@ class TracksController extends Controller
      * @param string $track_hash
      * @return \Illuminate\Http\Response
      */
-    public function show($artist_hash, $album_hash = null, $track_hash = null)
+    public function show(AuthorizationHeader $request, $artist_hash, $album_hash = null, $track_hash = null)
     {
         if ($track_hash == null) {
             $track_hash = $artist_hash;
@@ -91,11 +92,11 @@ class TracksController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\AuthorizationHeader $request
      * @param  int $hash
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $hash)
+    public function update(AuthorizationHeader $request, $hash)
     {
         // Validate request and data sent
         $track = $this->_validateTrackAndReturnObject($request, $hash);
@@ -121,12 +122,23 @@ class TracksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\AuthorizationHeader $request
      * @param  int $hash
      * @return \Illuminate\Http\Response
      */
-    public function destroy($hash)
+    public function destroy(AuthorizationHeader $request, $hash)
     {
-        //
+        // Validate request and data sent
+        $track = $this->_validateTrackAndReturnObject($request, $hash);
+
+        // Is the request valid then save and show artist
+        if (is_object($track)) {
+            $track->delete();
+
+            return response()->json(array('status' => 'success', 'message' => 'Track removed'));
+        }
+
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid track submitted'));
     }
 
 

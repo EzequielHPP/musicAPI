@@ -27,13 +27,15 @@ class HomeController extends Controller
     public function index()
     {
         $user = Users::find(Auth::user()->id);
-        $token = $user->token->token;
+        $token = $user->token;
         if($token === null){
             $token = $this->gen_uuid();
             UserTokens::create([
                 'user_id' => Auth::user()->id,
                 'token' => $token,
             ]);
+        } else {
+            $token = $token->token;
         }
         return view('home', ['token' => $token]);
     }

@@ -19,6 +19,7 @@ class CreateArtistsTable extends Migration
             $table->string('name')->unique();
             $table->integer('image_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
         });

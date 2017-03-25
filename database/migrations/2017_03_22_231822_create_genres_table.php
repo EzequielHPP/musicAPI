@@ -18,6 +18,7 @@ class CreateGenresTable extends Migration
             $table->string('_hash')->unique();
             $table->string('title');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

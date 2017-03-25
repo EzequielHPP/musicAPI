@@ -22,6 +22,7 @@ class CreateTracksTable extends Migration
             $table->integer('disc_number');
             $table->integer('track_order');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
         });

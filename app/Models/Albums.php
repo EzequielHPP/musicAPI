@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Albums extends Model
 {
     // Laravel Model Configuration
+    use SoftDeletes;
     protected $table = 'albums'; // Table Name
+    protected $dates = ['deleted_at'];
+
 
     /**
      * Get the image associated with the albums.

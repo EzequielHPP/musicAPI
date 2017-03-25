@@ -19,6 +19,7 @@ class CreateAlbumsTable extends Migration
             $table->string('name');
             $table->date('release_date');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

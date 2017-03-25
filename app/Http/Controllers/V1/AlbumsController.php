@@ -342,6 +342,10 @@ class AlbumsController extends Controller
             $images = json_decode($images);
         }
 
+        if(!is_array($images)){
+            $images = array($images);
+        }
+
         $attached = 0;
 
         $album = Albums::find($album_id);
