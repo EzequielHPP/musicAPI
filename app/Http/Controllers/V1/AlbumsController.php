@@ -125,8 +125,8 @@ class AlbumsController extends Controller
                 $this->_processArtists($request->artists, $album->id);
             }
 
-            // Load extra fields
-            $album->load('artists', 'images', 'genres');
+            // Reload album
+            $album = $this->_loadArtist($album->_hash);
 
             return response()->json($album);
         }

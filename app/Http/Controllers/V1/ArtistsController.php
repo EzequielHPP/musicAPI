@@ -104,8 +104,8 @@ class ArtistsController extends Controller
                 $this->_processImage($request->image, $artist->id);
             }
 
-            // Load extra fields
-            $artist->load('image');
+            // Reload artist
+            $artist = $this->_loadArtist($artist->_hash);
 
             return response()->json($artist);
         }
@@ -239,7 +239,6 @@ class ArtistsController extends Controller
      */
     private function _processImage($image, $artist_id = null)
     {
-
         if (!is_object($image)) {
             $image = json_decode($image);
         }
