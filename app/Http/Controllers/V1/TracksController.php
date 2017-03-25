@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\V1\Requests\AuthorizationHeader;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Artists;
 use App\Models\Albums;
@@ -141,6 +140,12 @@ class TracksController extends Controller
     }
 
 
+
+
+    /******************************************************
+     * Private Functions
+     ******************************************************/
+
     /**
      * Validate object sent as a Track
      *
@@ -170,7 +175,7 @@ class TracksController extends Controller
             return false;
         }
 
-        if(!$skipArtistsAndAlbum) {
+        if (!$skipArtistsAndAlbum) {
             $album = Albums::where('_hash', $sentObject->album)->first();
             if ($album == null) {
                 return array('status' => 'failed', 'message' => 'Invalid Album submitted');
@@ -196,8 +201,6 @@ class TracksController extends Controller
 
         return true;
     }
-
-
 
     /**
      * Validate sent data and check if required parameters could be sent
@@ -268,6 +271,11 @@ class TracksController extends Controller
         return array('attached' => $attached);
     }
 
+    /**
+     * Loads track and checks if exists
+     * @param $hash
+     * @return mixed
+     */
     private function _loadTrack($hash)
     {
         $trackObject = Tracks::where('_hash', $hash);

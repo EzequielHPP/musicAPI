@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\V1;
 
 use App\Models\Images;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Artists;
-use App\Models\Albums;
-use App\Models\Tracks;
 use App\Http\Controllers\V1\Requests\AuthorizationHeader;
 
 class ArtistsController extends Controller
@@ -167,6 +164,14 @@ class ArtistsController extends Controller
 
         return response()->json($artist);
     }
+
+
+
+
+
+    /******************************************************
+     * Private Functions
+     ******************************************************/
 
     /**
      * Validate sent data and check if required parameters could be sent

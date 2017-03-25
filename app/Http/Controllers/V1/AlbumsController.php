@@ -5,7 +5,6 @@ namespace App\Http\Controllers\V1;
 use App\Models\Artists;
 use App\Models\Genres;
 use App\Models\Images;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Albums;
 use App\Http\Controllers\V1\Requests\CreateAlbum;
@@ -49,7 +48,7 @@ class AlbumsController extends Controller
 
             $album->save();
 
-            $attachedArtists = $this->_processArtist($request->artist, $album->id);
+            $attachedArtists = $this->_processArtists($request->artist, $album->id);
 
             // Did we attach all the artists?
             // If Not then delete album and throw error
@@ -172,6 +171,14 @@ class AlbumsController extends Controller
         return response()->json($album);
     }
 
+
+
+
+    /******************************************************
+     * Private Functions
+     ******************************************************/
+
+
     /**
      * Validate sent data and check if required parameters could be sent
      * Return Album object or false
@@ -196,6 +203,11 @@ class AlbumsController extends Controller
         return $album;
     }
 
+    /**
+     * Loads album and relationships
+     * @param $hash
+     * @return bool
+     */
     private function _loadAlbum($hash)
     {
 
@@ -259,42 +271,6 @@ class AlbumsController extends Controller
         }
 
         return true;
-    }
-
-    /**
-     * Process artist sent and attach to required album
-     *
-     * @param array|string $artists
-     * @param integer $album_id
-     * @return array
-     */
-    private function _processArtist($artists, $album_id)
-    {
-
-        if (!is_array($artists)) {
-            $artists = json_decode($artists);
-        }
-
-        $attached = 0;
-
-        $album = Albums::find($album_id);
-        $album->artists()->detach();
-
-        foreach ($artists as $artist) {
-            // Does artist exist?
-            // Associate it, if not then return false
-            $realArtist = Artists::where('_hash', $artist)->first();
-
-            if ($realArtist !== null) {
-                $album->artists()->attach($realArtist->id);
-                $attached++;
-            } else {
-                $album->artists()->detach();
-                return false;
-            }
-        }
-
-        return array('attached' => $attached);
     }
 
     /**
