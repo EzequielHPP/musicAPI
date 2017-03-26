@@ -57,7 +57,7 @@ class AlbumsController extends Controller
             // If Not then delete album and throw error
             if ($attachedArtists == false) {
                 $album->forceDelete();
-                return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'),409);
             }
 
             $this->_processGenres($request->genres, $album->id);
@@ -72,7 +72,7 @@ class AlbumsController extends Controller
         if (is_array($validAlbum)) {
             return response()->json($validAlbum);
         }
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -90,7 +90,7 @@ class AlbumsController extends Controller
 
         $album = $this->_loadAlbum($album_hash);
 
-        return json_encode($album);
+        return response()->json($album);
     }
 
     /**
@@ -128,12 +128,12 @@ class AlbumsController extends Controller
             }
 
             // Reload album
-            $album = $this->_loadArtist($album->_hash);
+            $album = $this->_loadAlbum($album->_hash);
 
             return response()->json($album);
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -154,7 +154,7 @@ class AlbumsController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Album removed'));
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid album submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid album submitted'),409);
     }
 
     /**
@@ -308,8 +308,7 @@ class AlbumsController extends Controller
                 $savedGenre->_hash = md5(uniqid(rand() + time(), true));
                 $savedGenre->save();
             }
-
-            $album->genres()->attach($savedGenre->id);
+            $album->genres()->syncWithoutDetaching([$savedGenre->id]);
             $attached++;
         }
 
@@ -355,7 +354,7 @@ class AlbumsController extends Controller
                     $savedImage->save();
                 }
 
-                $album->images()->attach($savedImage->id);
+                $album->images()->syncWithoutDetaching([$savedImage->id]);
                 $attached++;
             }
         }
@@ -388,7 +387,7 @@ class AlbumsController extends Controller
             // Check if image already exists
             $savedArtist = Artists::where('_hash',$artist)->first();
             if($savedArtist != null) {
-                $album->artists()->attach($savedArtist->id);
+                $album->artists()->syncWithoutDetaching([$savedArtist->id]);
             }
 
             $attached++;

@@ -58,7 +58,7 @@ class TracksController extends Controller
             // If Not then delete album and throw error
             if ($attachedArtists == false) {
                 $track->forceDelete();
-                return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'),409);
             }
 
             $returnTrack = $this->_loadTrack($track->_hash);
@@ -69,7 +69,7 @@ class TracksController extends Controller
         if (is_array($validTrack)) {
             return response()->json($validTrack);
         }
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -119,7 +119,7 @@ class TracksController extends Controller
             return response()->json($track);
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -140,7 +140,7 @@ class TracksController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Track removed'));
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid track submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid track submitted'),409);
     }
 
 
@@ -259,7 +259,8 @@ class TracksController extends Controller
 
             if ($realArtist !== null) {
                 if ($track_id !== null) {
-                    $track->artists()->attach($realArtist->id);
+                    $tmpTrack = Tracks::find($track_id);
+                    $tmpTrack->artists()->syncWithoutDetaching([$realArtist->id]);
                     $attached++;
                 }
             } else {

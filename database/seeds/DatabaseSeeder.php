@@ -141,13 +141,13 @@ class DatabaseSeeder extends Seeder
                         "length" => $track[1],
                         "disc_number" => $track[2],
                     ])->each(function ($createdTrack) use ($createdAlbum, $createdArtist) {
-                        $createdTrack->artists()->attach($createdArtist->id);
+                        $createdTrack->artists()->syncWithoutDetaching([$createdArtist->id]);
                     });
                 }
 
-                $createdAlbum->artists()->attach($createdArtist->id);
-                $createdAlbum->genres()->attach($createdGenre->id);
-                $createdAlbum->images()->attach($createdImageAlbum->id);
+                $createdAlbum->artists()->syncWithoutDetaching([$createdArtist->id]);
+                $createdAlbum->genres()->syncWithoutDetaching([$createdGenre->id]);
+                $createdAlbum->images()->syncWithoutDetaching([$createdImageAlbum->id]);
             }
         }
     }

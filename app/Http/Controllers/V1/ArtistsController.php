@@ -61,7 +61,7 @@ class ArtistsController extends Controller
         if (is_array($validArtist)) {
             return response()->json($validArtist);
         }
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -109,7 +109,7 @@ class ArtistsController extends Controller
             return response()->json($artist);
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
     }
 
     /**
@@ -130,7 +130,7 @@ class ArtistsController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Artist removed'));
         }
 
-        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'));
+        return response()->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'),409);
     }
 
     /**

@@ -19,7 +19,7 @@ class AuthorizationHeader extends FormRequest
         if ($authorization == null) {
             return false;
         }
-        $token = UserTokens::where('token', $authorization)->firstOrFail();
+        $token = UserTokens::where('token', $authorization)->first();
         if ($token === null) {
             return false;
         }
