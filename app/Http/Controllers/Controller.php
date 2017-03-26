@@ -21,6 +21,17 @@ class Controller extends BaseController
             mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
+    
+    private function generateSpaces($n){
+        $output = "<br>";
+        $n = $n * 4;
+        while($n > 0){
+            $output .= "&nbsp;";
+            $n--;
+        }
+        
+        return $output;
+    }
 
     public function getRoutes()
     {
@@ -37,7 +48,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '[[{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth"}],"images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}],"genres":[{"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8","title":"Melodic Death Metal"}]}],...]',
+            "exampleReply" => '['.$this->generateSpaces(1).'[{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"artists":[{'.$this->generateSpaces(3).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(3).'"name":"Amon Amarth"'.$this->generateSpaces(2).'}],'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}],'.$this->generateSpaces(2).'"genres":[{'.$this->generateSpaces(3).'"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8",'.$this->generateSpaces(3).'"title":"Melodic Death Metal"'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'},'.$this->generateSpaces(1).'...]'.$this->generateSpaces(0).']',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -50,13 +61,13 @@ class Controller extends BaseController
                 array('name', 'string', 'Name of the new album', 'New Album Name'),
                 array('release_date', 'string', 'Release date', date('Y-m-d')),
                 array('genres', 'array', 'Array of strings of the genres', '["Pop","Rock"]'),
-                array('images', 'array', 'Array of image(s) objects', '[{"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300},...]'),
-                array('artists', 'array', 'Array of artist(s) hashes', '["e79c8fee899e31ca99bbb50afb7df6ab",...]'),
+                array('images', 'array', 'Array of image(s) objects', '[{'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(1).'"width":300,'.$this->generateSpaces(1).'"height":300'.$this->generateSpaces(0).'}]'),
+                array('artists', 'array', 'Array of artist(s) hashes', '["e79c8fee899e31ca99bbb50afb7df6ab"]'),
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '[{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25"}]',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '[{'.$this->generateSpaces(1).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"release_date":"2016-03-25"'.$this->generateSpaces(0).'}]',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(1).'}'
         );
         $routes[] = array(
             "methood" => "GET",
@@ -69,7 +80,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '[{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth"}],"images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}],"genres":[{"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8","title":"Melodic Death Metal"}]}]',
+            "exampleReply" => '[{'.$this->generateSpaces(1).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"release_date":"2016-03-25",'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth"'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"images":[{'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(2).'"width":300,'.$this->generateSpaces(2).'"height":300'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"genres":[{'.$this->generateSpaces(2).'"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8",'.$this->generateSpaces(2).'"title":"Melodic Death Metal"'.$this->generateSpaces(1).'}]'.$this->generateSpaces(0).'}]',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -84,13 +95,13 @@ class Controller extends BaseController
                 array('name', 'string', 'Name of the new album', 'New Album Name'),
                 array('release_date', 'string', 'Release date', date('Y-m-d')),
                 array('genres', 'array', 'Array of strings of the genres', '["Pop","Rock"]'),
-                array('images', 'array', 'Array of image(s) objects', '[{"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300},...]'),
-                array('artists', 'array', 'Array of artist(s) hashes', '["e79c8fee899e31ca99bbb50afb7df6ab",...]'),
+                array('images', 'array', 'Array of image(s) objects', '[{'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(1).'"width":300,'.$this->generateSpaces(1).'"height":300'.$this->generateSpaces(0).'}]'),
+                array('artists', 'array', 'Array of artist(s) hashes', '["e79c8fee899e31ca99bbb50afb7df6ab"]'),
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '[{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth"}],"images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}],"genres":[{"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8","title":"Melodic Death Metal"}]}]',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '[{'.$this->generateSpaces(1).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"release_date":"2016-03-25",'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth"'.$this->generateSpaces(1).'},'.$this->generateSpaces(1).'"images":[{'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(2).'"width":300,'.$this->generateSpaces(2).'"height":300'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"genres":[{'.$this->generateSpaces(2).'"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8",'.$this->generateSpaces(2).'"title":"Melodic Death Metal"'.$this->generateSpaces(1).'}]'.$this->generateSpaces(0).'}]',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "DELETE",
@@ -103,8 +114,8 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"status":"success","message":"Album removed"}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"status":"success",'.$this->generateSpaces(1).'"message":"Album removed"'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "GET",
@@ -117,7 +128,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}],"tracks":[{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1},...]}',
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"release_date":"2016-03-25",'.$this->generateSpaces(1).'"images":[{'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(2).'"width":300,'.$this->generateSpaces(2).'"height":300'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"tracks":[{'.$this->generateSpaces(2).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(2).'"title":"First Kill",'.$this->generateSpaces(2).'"length":261,'.$this->generateSpaces(2).'"disc_number":1,'.$this->generateSpaces(2).'"track_order":1'.$this->generateSpaces(1).'}]'.$this->generateSpaces(0).'}',
             "exampleBadReply" => ''
         );
 
@@ -134,7 +145,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '[[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}],[{"_hash":"cd1cdfb68b4ab83a934dbef82285d486","name":"To Be Deleted","image":{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}}],...]',
+            "exampleReply" => '['.$this->generateSpaces(1).'[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"image":{'.$this->generateSpaces(3).'"name":"Amon Amarth",'.$this->generateSpaces(3).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(3).'"width":550,'.$this->generateSpaces(3).'"height":413'.$this->generateSpaces(2).'}'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'...'.$this->generateSpaces(0).']',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -145,12 +156,12 @@ class Controller extends BaseController
             "urlelements" => array(),
             "bodyData" => array(
                 array('name', 'string', 'Name of the new Artist', 'New Artist Name'),
-                array('image', 'array', 'Image object', '{"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}')
+                array('image', 'array', 'Image object', '{'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(1).'"width":300,'.$this->generateSpaces(1).'"height":300'.$this->generateSpaces(0).'}')
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(1).'"name":"Amon Amarth",'.$this->generateSpaces(1).'"image":{'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(2).'"width":550,'.$this->generateSpaces(2).'"height":413'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "GET",
@@ -163,7 +174,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}',
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(1).'"name":"Amon Amarth",'.$this->generateSpaces(1).'"image":{'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(2).'"width":550,'.$this->generateSpaces(2).'"height":413'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -176,12 +187,12 @@ class Controller extends BaseController
             ),
             "bodyData" => array(
                 array('name', 'string', 'Name of the Artist', 'New Artist Name'),
-                array('image', 'array', 'Image object', '{"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}')
+                array('image', 'array', 'Image object', '{'.$this->generateSpaces(1).'"name":"Jomsviking",'.$this->generateSpaces(1).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(1).'"width":300,'.$this->generateSpaces(1).'"height":300'.$this->generateSpaces(0).'}')
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(1).'"name":"Amon Amarth",'.$this->generateSpaces(1).'"image":{'.$this->generateSpaces(2).''.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(2).'"width":550,'.$this->generateSpaces(2).'"height":413'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "DELETE",
@@ -194,8 +205,8 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"status":"success","message":"Artist removed"}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"status":"success",'.$this->generateSpaces(1).'"message":"Artist removed"'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "GET",
@@ -208,7 +219,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413},"albums":[{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}],"genres":[{"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8","title":"Melodic Death Metal"},...]}]}',
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(1).'"name":"Amon Amarth",'.$this->generateSpaces(1).'"image":{'.$this->generateSpaces(2).''.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(2).'"width":550,'.$this->generateSpaces(2).'"height":413'.$this->generateSpaces(1).'},'.$this->generateSpaces(1).'"albums":[{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}],'.$this->generateSpaces(2).'"genres":[{'.$this->generateSpaces(3).'"_hash":"8bbd9836f4b7b03c654a06c2c584e5c8",'.$this->generateSpaces(3).'"title":"Melodic Death Metal"'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'}]'.$this->generateSpaces(0).'}',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -222,7 +233,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413},"tracks":[{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1},...]}',
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(1).'"name":"Amon Amarth",'.$this->generateSpaces(1).'"image":{'.$this->generateSpaces(2).''.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(2).'"width":550,'.$this->generateSpaces(2).'"height":413'.$this->generateSpaces(1).'},'.$this->generateSpaces(1).'"tracks":[{'.$this->generateSpaces(2).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(2).'"title":"First Kill",'.$this->generateSpaces(2).'"length":261,'.$this->generateSpaces(2).'"disc_number":1,'.$this->generateSpaces(2).'"track_order":1'.$this->generateSpaces(1).'}]'.$this->generateSpaces(0).'}',
             "exampleBadReply" => ''
         );
 
@@ -239,7 +250,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '[{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1,"artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}],"album":{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}]}},...]',
+            "exampleReply" => '[{'.$this->generateSpaces(1).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(1).'"title":"First Kill",'.$this->generateSpaces(1).'"length":261,'.$this->generateSpaces(1).'"disc_number":1,'.$this->generateSpaces(1).'"track_order":1,'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"image":{'.$this->generateSpaces(3).'"name":"Amon Amarth",'.$this->generateSpaces(3).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(3).'"width":550,'.$this->generateSpaces(3).'"height":413'.$this->generateSpaces(2).'}'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"album":{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}]',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -250,7 +261,7 @@ class Controller extends BaseController
             "urlelements" => array(),
             "bodyData" => array(
                 array('album', 'string', 'Hash of the album of the track', 'e0fd4120d2126ee56a356d03a555bf97'),
-                array('artists', 'array', 'Array of Artist hashes', '["7596da80a32469e70661aedf2b60ea5d",...]'),
+                array('artists', 'array', 'Array of Artist hashes', '["7596da80a32469e70661aedf2b60ea5d"]'),
                 array('title', 'string', 'Title of the track', 'New title'),
                 array('length', 'integer', 'Total of seconds of the track', '249'),
                 array('disc_number', 'integer', 'Disc number', '1'),
@@ -258,8 +269,8 @@ class Controller extends BaseController
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1,"artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}],"album":{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}]}}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(1).'"title":"First Kill",'.$this->generateSpaces(1).'"length":261,'.$this->generateSpaces(1).'"disc_number":1,'.$this->generateSpaces(1).'"track_order":1,'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"image":{'.$this->generateSpaces(3).'"name":"Amon Amarth",'.$this->generateSpaces(3).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(3).'"width":550,'.$this->generateSpaces(3).'"height":413'.$this->generateSpaces(2).'}'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"album":{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "GET",
@@ -272,7 +283,7 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '',
-            "exampleReply" => '{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1,"artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}],"album":{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}]}}',
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(1).'"title":"First Kill",'.$this->generateSpaces(1).'"length":261,'.$this->generateSpaces(1).'"disc_number":1,'.$this->generateSpaces(1).'"track_order":1,'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"image":{'.$this->generateSpaces(3).'"name":"Amon Amarth",'.$this->generateSpaces(3).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(3).'"width":550,'.$this->generateSpaces(3).'"height":413'.$this->generateSpaces(2).'}'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"album":{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
             "exampleBadReply" => ''
         );
         $routes[] = array(
@@ -292,8 +303,8 @@ class Controller extends BaseController
             ),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"_hash":"f1ca96adf6ebeec5e6f206f6525478a8","album_id":1,"title":"First Kill","length":261,"disc_number":1,"track_order":1,"artists":[{"_hash":"7596da80a32469e70661aedf2b60ea5d","name":"Amon Amarth","image":{"id":1,"name":"Amon Amarth","file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg","width":550,"height":413}}],"album":{"_hash":"e0fd4120d2126ee56a356d03a555bf97","name":"Jomsviking","release_date":"2016-03-25","images":[{"id":2,"name":"Jomsviking","file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg","width":300,"height":300}]}}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"_hash":"f1ca96adf6ebeec5e6f206f6525478a8",'.$this->generateSpaces(1).'"title":"First Kill",'.$this->generateSpaces(1).'"length":261,'.$this->generateSpaces(1).'"disc_number":1,'.$this->generateSpaces(1).'"track_order":1,'.$this->generateSpaces(1).'"artists":[{'.$this->generateSpaces(2).'"_hash":"7596da80a32469e70661aedf2b60ea5d",'.$this->generateSpaces(2).'"name":"Amon Amarth",'.$this->generateSpaces(2).'"image":{'.$this->generateSpaces(3).'"name":"Amon Amarth",'.$this->generateSpaces(3).'"file":"https:\/\/images4.alphacoders.com\/172\/172526.jpg",'.$this->generateSpaces(3).'"width":550,'.$this->generateSpaces(3).'"height":413'.$this->generateSpaces(2).'}'.$this->generateSpaces(1).'}],'.$this->generateSpaces(1).'"album":{'.$this->generateSpaces(2).'"_hash":"e0fd4120d2126ee56a356d03a555bf97",'.$this->generateSpaces(2).'"name":"Jomsviking",'.$this->generateSpaces(2).'"release_date":"2016-03-25",'.$this->generateSpaces(2).'"images":[{'.$this->generateSpaces(3).'"name":"Jomsviking",'.$this->generateSpaces(3).'"file":"https:\/\/upload.wikimedia.org\/wikipedia\/en\/7\/7a\/AmonAmarthJomsviking.jpg",'.$this->generateSpaces(3).'"width":300,'.$this->generateSpaces(3).'"height":300'.$this->generateSpaces(2).'}]'.$this->generateSpaces(1).'}'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
         $routes[] = array(
             "methood" => "DELETE",
@@ -306,8 +317,8 @@ class Controller extends BaseController
             "bodyData" => array(),
             "replySuccessCode" => '200',
             "replyFailCode" => '409',
-            "exampleReply" => '{"status":"success","message":"Track removed"}',
-            "exampleBadReply" => '{"status":"failed","message":"xxx"}'
+            "exampleReply" => '{'.$this->generateSpaces(1).'"status":"success",'.$this->generateSpaces(1).'"message":"Track removed"'.$this->generateSpaces(0).'}',
+            "exampleBadReply" => '{'.$this->generateSpaces(1).'"status":"failed",'.$this->generateSpaces(1).'"message":"xxx"'.$this->generateSpaces(0).'}'
         );
 
         return $routes;

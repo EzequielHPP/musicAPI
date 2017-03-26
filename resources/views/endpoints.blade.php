@@ -101,7 +101,7 @@
                                                         {{$element[2]}}
                                                     </td>
                                                     <td>
-                                                        <pre>{!! var_dump(json_decode($element[3])) !!}</pre>
+                                                        <pre>{!! $element[3] !!}</pre>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -114,7 +114,7 @@
                                         @endif
                                         @if($route['exampleReply'] != '')
                                             <h3>Example reply:</h3>
-                                            <pre>{!! var_dump(json_decode($route['exampleReply'])) !!}</pre>
+                                            <pre>{!! $route['exampleReply'] !!}</pre>
                                         @endif
 
                                         @if($route['replyFailCode'] != '')
@@ -123,7 +123,7 @@
                                         @endif
                                         @if($route['exampleBadReply'] != '')
                                             <h3>Example Unsuccessful reply:</h3>
-                                            <pre>{!! var_dump(json_decode($route['exampleBadReply'])) !!}</pre>
+                                            <pre>{!! $route['exampleBadReply'] !!}</pre>
                                         @endif
                                     </td>
                                 </tr>
