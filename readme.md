@@ -83,6 +83,11 @@ Email:  api@musicapi.com
  Pass:  musicapi
 ```
 
+Also for every request made to the API you need to have the token that was give to you when you registered on the request header like:
+```
+Authorization: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
 
 ## Music api Endpoints
 
