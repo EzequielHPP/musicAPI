@@ -1,3 +1,6 @@
+
+## Music api Endpoints
+
 | Methood | Endpoint                        | Description                        | Returns                                   |
 |---------|---------------------------------|------------------------------------|-------------------------------------------|
 | GET     | /api/v1/albums                  | Get all albums                     | Array of Albums objects                   |
@@ -30,5 +33,3 @@ Built with
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
-
-## Music api
