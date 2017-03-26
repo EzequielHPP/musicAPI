@@ -125,7 +125,6 @@ class ArtistsController extends Controller
     public function destroy(AuthorizationHeader $request, $hash)
     {
         $artist = Artists::where('_hash', $hash)->first();
-
         // Is the artist valid then delete artist
         if (is_object($artist) && $artist !== null) {
             $artist->delete();

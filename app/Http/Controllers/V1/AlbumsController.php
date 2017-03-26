@@ -89,6 +89,9 @@ class AlbumsController extends Controller
         }
 
         $album = $this->_loadAlbum($album_hash);
+        if($album === null || sizeof($album) == 0){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid Album submitted'),409);
+        }
 
         return response()->json($album);
     }
@@ -168,6 +171,10 @@ class AlbumsController extends Controller
     {
         $albumObject = Albums::where('_hash', $hash);
         $album = $albumObject->first();
+
+        if($album === null || sizeof($album) == 0){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid Album submitted'),409);
+        }
         $album->load('images');
         $album->tracks;
 

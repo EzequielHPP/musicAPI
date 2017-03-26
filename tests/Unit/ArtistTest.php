@@ -44,22 +44,8 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300)), 'name' => md5(rand(1, 300)).'testCreatingArtist',
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $response = $this->json('POST', '/api/v1/artists', $newArtist, $headers);
 
@@ -81,21 +67,8 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray(true);
+        $headers = $this->_getHeaders($token);
 
         $response = $this->json('POST', '/api/v1/artists', $newArtist, $headers);
 
@@ -111,22 +84,8 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testGettingArtist",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -149,14 +108,9 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
+        $headers = $this->_getHeaders($token);
 
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
-
-        $response = $this->json('GET', '/api/v1/artists/' . rand(1,9999999999), array(), $headers);
+        $response = $this->json('GET', '/api/v1/artists/' . rand(1, 9999999999), array(), $headers);
 
         $this->_removeUser($token['user']);
 
@@ -168,24 +122,9 @@ class ArtistTest extends TestCase
      */
     public function testPatchingArtist()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testPatchingArtist",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -218,40 +157,17 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testPatchingWrongArtist",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
         if (is_array($artist)) {
             $artist = $artist[0];
         }
+        $newArtist = $this->_getNewArtistArray(true);
 
-        $newArtist = array(
-            'name' => md5(rand(1, 300)),
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $response = $this->json('PATCH', '/api/v1/artists/' . $artist->_hash.rand(1,9), $newArtist, $headers);
+        $response = $this->json('PATCH', '/api/v1/artists/' . $artist->_hash . rand(1, 9), $newArtist, $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -266,22 +182,8 @@ class ArtistTest extends TestCase
     {
 
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testPatchingArtistWithWrongData",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -299,7 +201,7 @@ class ArtistTest extends TestCase
             ))
         );
 
-        $response = $this->json('PATCH', '/api/v1/artists/' . $artist->_hash.rand(1,9), $newArtist, $headers);
+        $response = $this->json('PATCH', '/api/v1/artists/' . $artist->_hash . rand(1, 9), $newArtist, $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -312,24 +214,9 @@ class ArtistTest extends TestCase
      */
     public function testGettingArtistAlbums()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testGettingArtistAlbums",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -337,7 +224,7 @@ class ArtistTest extends TestCase
             $artist = $artist[0];
         }
 
-        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash.'/albums', array(), $headers);
+        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash . '/albums', array(), $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -350,24 +237,9 @@ class ArtistTest extends TestCase
      */
     public function testGettingWrongArtistAlbums()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testGettingWrongArtistAlbums",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -375,7 +247,7 @@ class ArtistTest extends TestCase
             $artist = $artist[0];
         }
 
-        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash.'1212/albums', array(), $headers);
+        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash . '1212/albums', array(), $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -388,24 +260,9 @@ class ArtistTest extends TestCase
      */
     public function testGettingArtistTracks()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testGettingArtistTracks",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -413,7 +270,7 @@ class ArtistTest extends TestCase
             $artist = $artist[0];
         }
 
-        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash.'/tracks', array(), $headers);
+        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash . '/tracks', array(), $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -426,24 +283,9 @@ class ArtistTest extends TestCase
      */
     public function testGettingWrongArtistTracks()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testGettingWrongArtistTracks",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -451,7 +293,7 @@ class ArtistTest extends TestCase
             $artist = $artist[0];
         }
 
-        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash.'1212/tracks', array(), $headers);
+        $response = $this->json('GET', '/api/v1/artists/' . $artist->_hash . '1212/tracks', array(), $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -464,24 +306,9 @@ class ArtistTest extends TestCase
      */
     public function testDeletingArtist()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testDeletingArtist",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -498,28 +325,13 @@ class ArtistTest extends TestCase
     }
 
     /**
-     * Deleting Artist
+     * Deleting wrong Artist
      */
     public function testDeletingWrongArtist()
     {
-
         $token = $this->_createUser();
-
-        $newArtist = array(
-            'name' => md5(rand(1, 300))."testDeletingWrongArtist",
-            'image' => json_encode(array(
-                "name" => "Jomsviking",
-                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
-                "width" => 300,
-                "height" => 300
-            ))
-        );
-
-        $headers = [
-            'Accept' => '*/*',
-            'Cache-Control' => 'no-cache',
-            'Authorization' => $token["token"]
-        ];
+        $newArtist = $this->_getNewArtistArray();
+        $headers = $this->_getHeaders($token);
 
         $responseCreate = $this->json('POST', '/api/v1/artists', $newArtist, $headers)->getContent();
         $artist = json_decode($responseCreate);
@@ -527,7 +339,7 @@ class ArtistTest extends TestCase
             $artist = $artist[0];
         }
 
-        $response = $this->json('DELETE', '/api/v1/artists/' . $artist->_hash.'121212', array(), $headers);
+        $response = $this->json('DELETE', '/api/v1/artists/' . $artist->_hash . '121212', array(), $headers);
 
         $this->_removeUser($token['user']);
         $this->_removeArtist($artist->_hash);
@@ -565,5 +377,37 @@ class ArtistTest extends TestCase
     {
         $artist = Artists::where('_hash', $artist_hash);
         $artist->forceDelete();
+    }
+
+    private function _getNewArtistArray($failState = false)
+    {
+        if($failState){
+            return array(
+                'image' => json_encode(array(
+                    "name" => "Jomsviking",
+                    "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
+                    "width" => 300,
+                    "height" => 300
+                ))
+            );
+        }
+        return array(
+            'name' => md5(rand(0,999999999)),
+            'image' => json_encode(array(
+                "name" => "Jomsviking",
+                "file" => "https://upload.wikimedia.org/wikipedia/en/7/7a/AmonAmarthJomsviking.jpg",
+                "width" => 300,
+                "height" => 300
+            ))
+        );
+    }
+
+    private function _getHeaders($token)
+    {
+        return array(
+            'Accept' => '*/*',
+            'Cache-Control' => 'no-cache',
+            'Authorization' => $token["token"]
+        );
     }
 }
