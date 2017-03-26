@@ -1,3 +1,17 @@
+## Unit Tests
+
+Passing:
+```                                      
+PHPUnit 6.0.10 by Sebastian Bergmann and contributors.
+
+......................................                            38 / 38 (100%)
+
+Time: 4.56 seconds, Memory: 24.00MB
+
+OK (38 tests, 38 assertions)
+```
+
+
 ## Requirements
 
 [`PHP 7.1`](http://php.net/manual/en/install.php) - This version of Laravel uses PHP 7.1
