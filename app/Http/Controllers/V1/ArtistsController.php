@@ -17,10 +17,12 @@ class ArtistsController extends Controller
      */
     public function index(AuthorizationHeader $request)
     {
-        $artistsObject = Artists::all();
-
-
-        return response()->json($artistsObject);
+        $allArtists = Artists::all();
+        $return = array();
+        foreach($allArtists as $artist){
+            $return[] = $this->_loadArtist($artist->_hash);
+        }
+        return response()->json($return);
     }
 
     /**
@@ -59,7 +61,7 @@ class ArtistsController extends Controller
         if (is_array($validArtist)) {
             return response()->json($validArtist);
         }
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -107,7 +109,7 @@ class ArtistsController extends Controller
             return response()->json($artist);
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -128,7 +130,7 @@ class ArtistsController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Artist removed'));
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'));
     }
 
     /**

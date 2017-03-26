@@ -11,4 +11,5 @@ class Images extends Model
     use SoftDeletes;
     protected $table = 'images'; // Table Name
     protected $dates = ['deleted_at'];
+    protected $hidden = array('created_at','updated_at','deleted_at','pivot');
 }

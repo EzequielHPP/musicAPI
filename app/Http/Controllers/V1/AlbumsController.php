@@ -20,9 +20,12 @@ class AlbumsController extends Controller
      */
     public function index(AuthorizationHeader $request)
     {
-        $albums = Albums::all();
-
-        return json_encode($albums);
+        $allAlbums = Albums::all();
+        $return = array();
+        foreach($allAlbums as $album){
+            $return[] = $this->_loadAlbum($album->_hash);
+        }
+        return response()->json($return);
     }
 
     /**
@@ -48,13 +51,13 @@ class AlbumsController extends Controller
 
             $album->save();
 
-            $attachedArtists = $this->_processArtists($request->artist, $album->id);
+            $attachedArtists = $this->_processArtists($request->artists, $album->id);
 
             // Did we attach all the artists?
             // If Not then delete album and throw error
             if ($attachedArtists == false) {
                 $album->forceDelete();
-                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+                return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
             }
 
             $this->_processGenres($request->genres, $album->id);
@@ -69,7 +72,7 @@ class AlbumsController extends Controller
         if (is_array($validAlbum)) {
             return response()->json($validAlbum);
         }
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -130,7 +133,7 @@ class AlbumsController extends Controller
             return response()->json($album);
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -151,7 +154,7 @@ class AlbumsController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Album removed'));
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid album submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid album submitted'));
     }
 
     /**
@@ -244,14 +247,14 @@ class AlbumsController extends Controller
             if ($sentObject->images === null) {
                 return false;
             }
-            if ($sentObject->artist === null) {
+            if ($sentObject->artists === null) {
                 return false;
             }
 
             // Check if album already exists
             $tmpAlbum = Albums::where('name', $sentObject->name)->where('release_date', $sentObject->release_date)->first();
             if ($tmpAlbum !== null) {
-                $sentArtists = $sentObject->artist;
+                $sentArtists = $sentObject->artists;
                 if (!is_array($sentArtists)) {
                     $sentArtists = json_decode($sentArtists);
                 }

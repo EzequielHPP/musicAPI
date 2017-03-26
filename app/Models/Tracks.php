@@ -11,6 +11,7 @@ class Tracks extends Model
     use SoftDeletes;
     protected $table = 'tracks'; // Table Name
     protected $dates = ['deleted_at'];
+    protected $hidden = array('id', 'created_at','updated_at','deleted_at','pivot');
 
     /**
      * Get the Album associated with the track.

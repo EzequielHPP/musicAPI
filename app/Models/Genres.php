@@ -11,6 +11,7 @@ class Genres extends Model
     use SoftDeletes;
     protected $table = 'genres'; // Table Name
     protected $dates = ['deleted_at'];
+    protected $hidden = array('id', 'created_at','updated_at','deleted_at','pivot');
 
 
 

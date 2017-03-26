@@ -17,8 +17,12 @@ class TracksController extends Controller
      */
     public function index(AuthorizationHeader $request)
     {
-
-        return response()->json(Tracks::all());
+        $allTracks = Tracks::all();
+        $return = array();
+        foreach($allTracks as $track){
+            $return[] = $this->_loadTrack($track->_hash);
+        }
+        return response()->json($return);
     }
 
     /**
@@ -54,7 +58,7 @@ class TracksController extends Controller
             // If Not then delete album and throw error
             if ($attachedArtists == false) {
                 $track->forceDelete();
-                return response()->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
+                return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid Artists submitted'));
             }
 
             $returnTrack = $this->_loadTrack($track->_hash);
@@ -65,7 +69,7 @@ class TracksController extends Controller
         if (is_array($validTrack)) {
             return response()->json($validTrack);
         }
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -115,7 +119,7 @@ class TracksController extends Controller
             return response()->json($track);
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid object submitted'));
     }
 
     /**
@@ -136,7 +140,7 @@ class TracksController extends Controller
             return response()->json(array('status' => 'success', 'message' => 'Track removed'));
         }
 
-        return response()->json(array('status' => 'failed', 'message' => 'Invalid track submitted'));
+        return response('',409)->json(array('status' => 'failed', 'message' => 'Invalid track submitted'));
     }
 
 

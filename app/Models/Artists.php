@@ -11,6 +11,7 @@ class Artists extends Model
     use SoftDeletes;
     protected $table = 'artists'; // Table Name
     protected $dates = ['deleted_at'];
+    protected $hidden = array('id', 'image_id','created_at','updated_at','deleted_at','pivot');
 
     /**
      * Get the Albums associated with the artist.
