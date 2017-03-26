@@ -1,6 +1,6 @@
 <?php
 
-namespace TestsUnit;
+namespace Tests\Unit;
 
 use App\Models\Albums;
 use App\Models\Artists;

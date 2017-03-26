@@ -87,7 +87,9 @@ class TracksController extends Controller
         }
 
         $track = $this->_loadTrack($track_hash);
-
+        if($track == null){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid object submitted'),409);
+        }
         return response()->json($track);
 
     }
@@ -285,11 +287,13 @@ class TracksController extends Controller
     {
         $trackObject = Tracks::where('_hash', $hash);
         $track = $trackObject->first();
-        $track->load(['artists' => function ($query) {
-            $query->with('image');
-        }, 'album' => function ($query) {
-            $query->with('images');
-        }]);
+        if($track != null) {
+            $track->load(['artists' => function ($query) {
+                $query->with('image');
+            }, 'album' => function ($query) {
+                $query->with('images');
+            }]);
+        }
 
         return $track;
     }
