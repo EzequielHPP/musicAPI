@@ -1,4 +1,60 @@
 
+## Instalation
+
+Make sure tat the following folder exists:
+```
+<instalation dir>/bootstrap/cache
+```
+
+
+Install the NPM plugins from the root of your project
+```
+npm install
+```
+
+
+Install all the required libraries from Composer
+```
+composer install
+```
+
+
+Generate the Auto-load file
+```
+composer dump-autoload -o
+```
+
+
+Create your `.env` file on the root of your project and fill with the required values
+You can copy the `.env.example` and rename it to `.env`
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=<database name>
+DB_USERNAME=<database username>
+DB_PASSWORD=<database password>
+DB_SOCKET=<full path to the socket if required>
+```
+
+Generate an Artisan Key
+```
+php artisan key:generate
+```
+
+
+Generate all the tables of the Project
+```
+php artisan migrate
+```
+
+
+If you want to seed the DB with data run the following command
+```
+php artisan db:seed
+```
+
+
 ## Music api Endpoints
 
 | Methood | Endpoint                        | Description                        | Returns                                   |
