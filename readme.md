@@ -1,3 +1,10 @@
+## Requirements
+
+[`PHP 7.1`](http://php.net/manual/en/install.php) - This version of Laravel uses PHP 7.1
+
+[`Composer`](https://getcomposer.org/) - Composer tool required for the libraries
+
+[`NPM`](https://www.npmjs.com/) - NPM Package manager is also required
 
 ## Instalation
 
@@ -7,7 +14,7 @@ Make sure tat the following folder exists:
 ```
 
 
-Install the NPM plugins from the root of your project
+Install the NPM packages from the root of your project
 ```
 npm install
 ```
@@ -25,8 +32,9 @@ composer dump-autoload -o
 ```
 
 
-Create your `.env` file on the root of your project and fill with the required values
-You can copy the `.env.example` and rename it to `.env`
+To make the project connect to you local DB you need to create your `.env` file on the root of your project and fill with the required values.
+
+You can copy the `.env.example` and rename it to `.env` and then change the `DB_` values to match your local machine DB.
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -43,7 +51,8 @@ php artisan key:generate
 ```
 
 
-Generate all the tables of the Project
+Generate all the tables of the Project.
+but you can import the DB Dump in the `music_api_2017-03-26.sql.gz` file.
 ```
 php artisan migrate
 ```
@@ -52,6 +61,12 @@ php artisan migrate
 If you want to seed the DB with data run the following command
 ```
 php artisan db:seed
+```
+
+If the DB was imported then these are the login details:
+```
+Email:  api@musicapi.com
+ Pass:  musicapi
 ```
 
 
