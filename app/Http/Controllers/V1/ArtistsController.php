@@ -74,8 +74,11 @@ class ArtistsController extends Controller
     public function show(AuthorizationHeader $request, $hash)
     {
 
-        $artistObject = Artists::where('_hash', $hash);
-        $artist = $artistObject->first()->load('image');
+        $artistObject = Artists::where('_hash', $hash)->first();
+        if($artistObject === null){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid Artist submitted'),409);
+        }
+        $artist = $artistObject->load('image');
 
         return response()->json($artist);
     }
@@ -144,6 +147,9 @@ class ArtistsController extends Controller
     {
         $artistObject = Artists::where('_hash', $hash);
         $artist = $artistObject->first();
+        if($artist === null){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'),409);
+        }
         $artist->load('image');
         $artist->albums->load('images', 'genres');
 
@@ -161,6 +167,9 @@ class ArtistsController extends Controller
     {
         $artistObject = Artists::where('_hash', $hash);
         $artist = $artistObject->first();
+        if($artist === null){
+            return response()->json(array('status' => 'failed', 'message' => 'Invalid artist submitted'),409);
+        }
         $artist->load('image');
         $artist->tracks;
 
