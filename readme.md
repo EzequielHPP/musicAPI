@@ -8,7 +8,7 @@
 
 ## Instalation
 
-Make sure tat the following folder exists:
+Make sure that the following folder exists:
 ```
 <instalation dir>/bootstrap/cache
 ```
